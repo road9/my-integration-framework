@@ -1,6 +1,7 @@
 package com.lugq.mydemo.hzcframe.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Window;
 /**
@@ -12,10 +13,13 @@ import android.view.Window;
  */
 public class BasicActivity extends Activity {
 	
+	protected Context mContext;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		mContext = this.getApplicationContext();
 	}
 	
 	@Override
