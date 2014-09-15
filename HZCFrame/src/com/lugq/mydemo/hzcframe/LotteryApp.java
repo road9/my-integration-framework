@@ -10,10 +10,27 @@ import android.app.Application;
  */
 public class LotteryApp extends Application {
 	
-	/**
-	 * the server time the user first open the software.
-	 */
+	// the sessionid from server.
+	private String sessionid;
+	
+	// the server time the user first open the software.
 	private String time;
+
+	/**
+	 * the sessionid from server.
+	 * @return
+	 */
+	public String getSessionid() {
+		return sessionid;
+	}
+
+	/**
+	 * the sessionid from server.
+	 * @param sessionid
+	 */
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
+	}
 
 	/**
 	 * the server time the user first open the software.

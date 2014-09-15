@@ -1,9 +1,13 @@
 package com.lugq.mydemo.hzcframe.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 
+import com.lugq.mydemo.hzcframe.MainActivity;
 import com.lugq.mydemo.hzcframe.R;
+import com.lugq.mydemo.hzcframe.control.ControlMessage;
+import com.lugq.mydemo.hzcframe.control.InitControl;
 import com.lugq.mydemo.hzcframe.util.HttpConnectionUtil;
 
 /**
@@ -15,7 +19,11 @@ import com.lugq.mydemo.hzcframe.util.HttpConnectionUtil;
  */
 public class StartUp extends BasicActivity {
 	
-	private MyHandler myHandler;
+	private static final int TO_MAIN = 0;
+	private  static final int HALL_INIT = 1;
+	
+	private MyHandler mHandler;
+	private InitControl mInitControl;
 	
 	private static class MyHandler extends WeakReferenceHandler<StartUp> {
 
@@ -25,7 +33,20 @@ public class StartUp extends BasicActivity {
 
 		@Override
 		public void handleMessage(StartUp reference, Message msg) {
-			
+			switch (msg.what) {
+			case ControlMessage.FINISH_CHECK_CONNECTION:
+				
+				break;
+			case TO_MAIN:
+				reference.gotoMain();
+				break;
+			case HALL_INIT:
+				reference.mHandler.sendEmptyMessageDelayed(TO_MAIN, 1500);
+				
+				break;
+			default:
+				break;
+			}
 		}
 		
 	}
@@ -40,7 +61,8 @@ public class StartUp extends BasicActivity {
 	}
 	
 	private void initData() {
-		
+		mHandler = new MyHandler(this);
+		mInitControl = new InitControl(this, mHandler);
 	}
 
 	private void setupViews() {
@@ -50,8 +72,18 @@ public class StartUp extends BasicActivity {
 	
 	private void init() {
 		if (HttpConnectionUtil.isNetworkAvailable(mContext)) {
-			
+			mInitControl.checkConnection();
 		}
+		mInitControl.createShortCut();
+		
+		mHandler.sendEmptyMessage(HALL_INIT);
+	}
+	
+	private void gotoMain() {
+		Intent intent = new Intent();
+		intent.setClass(this, MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 	
 }

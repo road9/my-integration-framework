@@ -1,8 +1,15 @@
 package com.lugq.mydemo.hzcframe;
 
-import com.lugq.mydemo.hzcframe.util.ActionUtil;
-
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences.Editor;
+
+import com.lugq.mydemo.hzcframe.netbasic.AsyncConnectionBasic;
+import com.lugq.mydemo.hzcframe.netbasic.ConnectionBasic;
+import com.lugq.mydemo.hzcframe.netbasic.JsonAnalyse;
+import com.lugq.mydemo.hzcframe.requestInf.ServerTimeRequestInf;
+import com.lugq.mydemo.hzcframe.util.ActionUtil;
+import com.lugq.mydemo.hzcframe.util.TimeUtils;
 
 /**
  * about domain.
@@ -42,8 +49,37 @@ public class Domain {
 		int presentServer = lastServer;
 		for (int i = 0; i < length; i++) {
 			API_BASE_ENDPOINT = getHost(context, presentServer);
-			isReachable = is
+			isReachable = isHostReachable(context);
+			
+			if (isReachable) {
+				break;
+			} else {
+				presentServer = getNext(context, presentServer);
+			}
 		}
+		
+		if (isReachable == false) {
+			presentServer = 0;
+			API_BASE_ENDPOINT = getHost(context, presentServer);
+		}
+		
+		if (lastServer != presentServer) {
+			Editor databaseData = ActionUtil.getEditor(context);
+			databaseData.putInt(SERVERDATABASE, presentServer);
+			databaseData.commit();
+		}
+	}
+	
+	/**
+	 * get http url.
+	 * @param context
+	 * @return
+	 */
+	public static final String getHTTPURL(Context context) {
+		if (API_BASE_ENDPOINT == null) {
+			new Domain().checkHostReachable(context);
+		}
+		return API_BASE_ENDPOINT;
 	}
 	
 	/**
@@ -67,7 +103,22 @@ public class Domain {
 	 * @return
 	 */
 	private boolean isHostReachable(Context context) {
-		
+		ServerTimeRequestInf requestInf = new ServerTimeRequestInf();
+		ConnectionBasic connect = new ConnectionBasic(context);
+		connect.timeout = 3000;
+		String[] json = connect.requestGet(requestInf.getUrl(context));
+		if (json != null && json.length == 2) {
+			if (json[0].equals(String.valueOf(AsyncConnectionBasic.GET_SUCCESS_STATUS))) {
+				JsonAnalyse ja = new JsonAnalyse();
+				String time = ja.getData(json[1], "datetime");
+				if (time != null) {
+					LotteryApp appState = (LotteryApp)((Activity) context).getApplication();
+					appState.setTime(TimeUtils.convertDate(time, "yyyy-MM-dd HH:mm:ss", "yyyyMMddHHmm"));
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

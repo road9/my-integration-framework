@@ -26,6 +26,7 @@ public class ServerTimeRequestInf {
 	public String getUrl(Context context) {
 		ServerTimeRequestInf requestInf = new ServerTimeRequestInf();
 		HttpConnection connection = new HttpConnection(context);
-		connection.
+		connection.getServiceGateway(false, requestInf.initHashMap(context));
+		return connection.getmUrl();
 	}
 }

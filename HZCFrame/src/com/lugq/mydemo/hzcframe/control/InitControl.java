@@ -9,9 +9,11 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.CheckBox;
 
 import com.lugq.mydemo.hzcframe.R;
 import com.lugq.mydemo.hzcframe.activity.StartUp;
+import com.lugq.mydemo.hzcframe.task.CheckConnectionTask;
 import com.lugq.mydemo.hzcframe.taskbasic.TaskPoolService;
 import com.lugq.mydemo.hzcframe.util.ActionUtil;
 
@@ -53,15 +55,8 @@ public class InitControl {
 	 * Check the connections.
 	 */
 	public void checkConnection() {
-		TaskPoolService.getInstance().requestService(runnable);
+		TaskPoolService.getInstance().requestService(new CheckConnectionTask(mContext, mHandler));
 	}
-	
-	/*
-	 * 
-	 *     public void checkConnection() {
-        TaskPoolService.getInstance().requestService(new CheckConnectTask(mContext, mHandler));
-    }
-	 */
 	
 	/**
 	 * Determine whether there is a shortcut to the desktop.
