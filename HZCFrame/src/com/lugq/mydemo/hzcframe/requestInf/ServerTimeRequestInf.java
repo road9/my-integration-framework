@@ -17,7 +17,7 @@ import android.content.Context;
 public class ServerTimeRequestInf {
 	
 	public HashMap<String, String> initHashMap(Context context) {
-		HashMap<String, String> parameter = new HashMap<>();
+		HashMap<String, String> parameter = new HashMap<String, String>();
 		parameter.put("service", "get_time");
 		parameter.put("pid", LotteryUtils.getPid(context));
 		return parameter;
