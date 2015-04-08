@@ -11,7 +11,7 @@ import com.lugq.mydemo.hzcframe.control.InitControl;
 import com.lugq.mydemo.hzcframe.util.HttpConnectionUtil;
 
 /**
- * lunch application.
+ * lunch application.启动类，程序入口
  * @ClassName: StartUp
  * @author lugq
  * @date 2014年9月5日 下午3:00:32
@@ -19,12 +19,15 @@ import com.lugq.mydemo.hzcframe.util.HttpConnectionUtil;
  */
 public class StartUp extends BasicActivity {
 	
+	// 跳转到 MainActivity.
 	private static final int TO_MAIN = 0;
+	// 展示页展示logo
 	private  static final int HALL_INIT = 1;
 	
 	private MyHandler mHandler;
 	private InitControl mInitControl;
 	
+	// 继承软引用防止handler引起内存泄露
 	private static class MyHandler extends WeakReferenceHandler<StartUp> {
 
 		public MyHandler(StartUp reference) {
